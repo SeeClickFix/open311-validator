@@ -1,5 +1,7 @@
 Tools to Validate311
 ====================================
 
-Todo
+Running
+----------
 
+Install HTTParty gem. Run using command 'ruby bin/validate'
