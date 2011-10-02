@@ -9,6 +9,10 @@ class Session
     @resources
   end
   
+  def discovery
+    @resources.first
+  end
+  
   def resource
     @resources.last
   end
@@ -18,7 +22,7 @@ class Session
   end
   
   def add_resource(options)
-    @resources << Resource.new(self.resource,options).get
+    @resources << Resource.new(self,options).get
   end
   
 end

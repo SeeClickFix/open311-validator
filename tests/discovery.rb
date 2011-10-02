@@ -20,8 +20,8 @@ test "Service Discovery", :with => :discovery_resource do
   end  
   
   rule 'return valid DateTime objects' do 
-    Helper.validate_date_time(@resource.xml.response.discovery.changeset).should == true
-    Helper.validate_date_time(@resource.json.response.changeset).should == true
+    validate_date_time(@resource.xml.response.discovery.changeset).should == true
+    validate_date_time(@resource.json.response.changeset).should == true
   end
     
   rule "contacts should return same for both formats" do 

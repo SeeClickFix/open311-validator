@@ -57,13 +57,6 @@ class Object
   end
 end
 
-module Helper
-
-  def self.validate_date_time(time)
-    return true if Time.iso8601(time) rescue false
-  end
-
-end
 
 def rule(msg)
   begin

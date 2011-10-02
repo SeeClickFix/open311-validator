@@ -10,9 +10,9 @@
   #
   #
 
+data = { :email => 'foo@bar.com', :description => 'I know' }
 
-
-test "Creating Response", :with => :create_resource do
+test "Creating Response Once", { :with => :create_resource_once, :post => data } do
   
   rule 'each should return something' do 
     @resource.xml.each do |request|

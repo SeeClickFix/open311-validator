@@ -1,9 +1,18 @@
 
 
 class Response
-  
-  def initialize(url)
+  attr_accessor :raw
+
+  def get(url)
     @raw = HTTParty.get(url)
+    self
+  end
+  
+  def post(url,body)
+    # TODO: remove. This is simply for my testing.
+    url = 'http://localhost:3000/open311/requests.xml'
+    @raw = HTTParty.post(url, :body => body)
+    self
   end
   
   def response
