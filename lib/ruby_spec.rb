@@ -61,15 +61,15 @@ end
 def rule(msg)
   begin
     yield
-    print "\tRule: #{msg.to_s.lstrip.ljust(50)[0..50]}"," - PASSED"
+    print "    #{msg.to_s.lstrip.ljust(90)[0..70]}","PASSED"
   rescue Exception => e
-    print "\tRule: #{msg.to_s.lstrip.ljust(50)[0..50]} - FAILED - #{e.to_s}"
+    print "    #{msg.to_s.lstrip.ljust(90)[0..70]}","FAILED  #{e.to_s}"
   end
   puts ""
 end
 
 def test(msg,options)
-  puts "Testing - #{msg.to_s}"
+  puts "  Testing - #{msg.to_s}"
   @session.add_resource OpenStruct.new(@options.merge(options))
   @resource = @session.resource
   yield
