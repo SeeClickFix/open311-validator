@@ -88,13 +88,17 @@ test "Service Discovery", :with => :discovery_resource do
   end
   
   rule "each endpoint should have at least one supported format" do 
-    xml_endpoints.each do |endpoint|
-      endpoint.formats.format.size > 0
-    end
-    json_endpoints.each do |endpoint|
-      endpoint.formats.size > 0
+    all_endpoints.each do |endpoint|
+      endpoint_array(endpoint).size.should > 0
     end
   end
+  
+  rule "all v2 endpoints should support xml" do
+    v2_endpoints.each do |endpoint|
+      endpoint_array(endpoint).select{|format| format == 'text/xml' }.size.should > 0
+    end
+  end
+  
 end
 
 
