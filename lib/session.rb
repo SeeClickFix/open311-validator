@@ -25,4 +25,11 @@ class Session
     @resources << Resource.new(self,options).get
   end
   
+  def run_tests
+    load 'tests/discovery.rb'
+    load 'tests/services.rb'
+    load 'tests/service_definition.rb'
+    load 'tests/create.rb' if @options[:write]
+  end
+  
 end

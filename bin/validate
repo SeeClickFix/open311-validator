@@ -8,7 +8,6 @@ require 'optparse'
 require 'validate_311'
 
 @options = { :discovery_url   => 'http://seeclickfix.com/open311/discovery', 
-             :json            => true,
              :production      => false,
              :api_key         => nil,
              :jurisdiction_id => nil,
@@ -21,9 +20,6 @@ require 'validate_311'
    opts.banner = "Usage: validate [options]"
    opts.on('-u', '--url [discovery_url]','') do |url|
      @options[:discovery_url] = url if url
-   end
-   opts.on('-j', '--json [true/false]', 'Default: false') do |json|
-     @options[:json] = json unless json.nil?
    end
    opts.on('-p', '--production [true/false]', 'Default: false') do |resp|
      @options[:production] = resp unless resp.nil?
@@ -44,8 +40,4 @@ require 'validate_311'
  end.parse!
            
 @session = Session.new
-
-load 'tests/discovery.rb'
-load 'tests/services.rb'
-load 'tests/service_definition.rb'
-load 'tests/create.rb' if @options[:write]
+@session.run_tests
