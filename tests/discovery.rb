@@ -11,14 +11,14 @@ require 'helpers/discovery_helper';include DiscoveryHelper
   #
 
 
-test "Service Discovery", :with => :discovery_resource do
+test "Service Discovery", :with => :discovery_url do
   
   rule 'url should end with "discovery"' do 
-    @resource.options.discovery_url[-9..-1].should == 'discovery'
+    resource.options[:discovery_url][-9..-1].should == 'discovery'
   end
   
   rule 'both formats should return results' do 
-     @resource.xml.to_s.strip.should_not == '' && @resource.json.to_s.strip.should_not == ''
+     resource.raw.xml.to_s.strip.should_not == '' && resource.raw.json.to_s.strip.should_not == ''
   end  
   
   rule 'both formats should have contacts' do 

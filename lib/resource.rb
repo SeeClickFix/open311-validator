@@ -1,70 +1,43 @@
 
 
 class Resource
+  attr_accessor :options, :raw
   
   def initialize(session,options)
     @options = options
-    @raw = OpenStruct.new
     @session = session
     @last_resource = session.resource
   end
   
-  def get
-    self.send @options.with
+  def get_next
+    self.send @options[:with]
   end
   
-  def discovery_resource
-    @raw.json = Response.new.get("#{@options.discovery_url}.json") if @options.json
-    @raw.xml  = Response.new.get("#{@options.discovery_url}.xml")
-    @raw.options = @options
-    @raw
+  def discovery_url
+    @raw = OpenStruct.new
+    @raw.json = Response.new(@options[:discovery_url],'json').get(".json")
+    @raw.xml  = Response.new(@options[:discovery_url],'xml').get(".xml")
   end
-  
+
   def services_resource
-    @raw.json = []
-    @raw.xml  = []
-    
-    # For each endpoint...
-    @session.discovery.xml.response.discovery.endpoints.endpoint.each do |endpoint|
-      next if type(endpoint) == 'production' and !@options.production
-      @raw.xml << Response.new.get("#{endpoint.url}/services.xml?jurisdiction_id=#{@options.jurisdiction_id}")
+    @raw = []
+    @session.endpoints.each do |endpoint|
+      response = Response.new(endpoint[0],endpoint[1])
+      response.get_and_unwrap("/services.#{endpoint[1]}?jurisdiction_id=#{@options[:jurisdiction_id]}",'services.service')
+      @raw << response
     end
-    
-    @session.discovery.json.response.endpoints.each do |endpoint|
-      next if type(endpoint) == 'production' and !@options.production
-      @raw.json << Response.new.get("#{endpoint.url}/services.xml?jurisdiction_id=#{@options.jurisdiction_id}")
-    end if @options.json
-    
-    @raw.options = @options
-    @raw
   end
   
   def definition_resource
-    @raw.json = []
-    @raw.xml  = []
-    # For each endpoint...
-    @session.discovery.xml.response.discovery.endpoints.endpoint.each do |endpoint|
-      next if type(endpoint) == 'production' and !@options.production
-      @last_resource.xml.each do |service_list|
-        service_list.response.services.each do |service|
-          next unless service.metadata
-          @raw.xml << Response.new.get("#{endpoint.url}/services/#{service.service_code}.xml?jurisdiction_id=#{@options.jurisdiction_id}")
-        end
+    @raw = []
+    @session.raw_services.each do |raw_service|
+      raw_service.response.each do |service|
+        next if !service.metadata or service.metadata == 'false'
+        response = Response.new(raw_service.base,raw_service.format)
+        response.get_and_unwrap("/services/#{service.service_code}.#{raw_service.format}?jurisdiction_id=#{@options[:jurisdiction_id]}",'')
+        @raw << response
       end
     end
-    
-    @session.discovery.json.response.endpoints.each do |endpoint|
-      next if type(endpoint) == 'production' and !@options.production
-      @last_resource.json.each do |service_list|
-        service_list.response.services.each do |service|
-          next unless service.metadata
-          @raw.json << Response.new.get("#{endpoint.url}/services/#{service.service_code}.xml?jurisdiction_id=#{@options.jurisdiction_id}")
-        end
-      end
-    end if @options.json
-  
-    @raw.options = @options
-    @raw
   end
   
   # 
@@ -116,8 +89,10 @@ class Resource
     @session.resources[1].xml.first.response.services.service.service_code
   end
   
-  def type(endpoint)
-    endpoint.marshal_dump[:type]
-  end
+
+  
+  private
+  
+
   
 end

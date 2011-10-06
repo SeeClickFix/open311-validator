@@ -12,15 +12,22 @@
 test "Services", :with => :services_resource do
   
   rule 'each should return something' do 
-    @resource.xml.each do |request|
-      request.response.should_not == ''
+   # raise resource.raw.map{|r| r.response }.flatten.inspect
+    
+    resource.raw.each do |services| 
+      services.response
     end
     
-    if @resource.options.json
-      @resource.json.each do |request|
-        request.response.should_not == ''
-      end
-    end
+    
+    # @resource.xml.each do |request|
+    #   request.response.should_not == ''
+    # end
+    # 
+    # if @resource.options.json
+    #   @resource.json.each do |request|
+    #     request.response.should_not == ''
+    #   end
+    # end
   end
   
 end

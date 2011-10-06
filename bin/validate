@@ -7,7 +7,7 @@ $LOAD_PATH.unshift(lib) if File.directory?(lib) && !$LOAD_PATH.include?(lib)
 require 'optparse'
 require 'validate_311'
 
-@options = { :discovery_url   => 'http://seeclickfix.com/open311/discovery', 
+options = { :discovery_url   => 'http://seeclickfix.com/open311/discovery', 
              :production      => false,
              :api_key         => nil,
              :jurisdiction_id => nil,
@@ -19,25 +19,25 @@ require 'validate_311'
  OptionParser.new do |opts|
    opts.banner = "Usage: validate [options]"
    opts.on('-u', '--url [discovery_url]','') do |url|
-     @options[:discovery_url] = url if url
+     options[:discovery_url] = url if url
    end
    opts.on('-p', '--production [true/false]', 'Default: false') do |resp|
-     @options[:production] = resp unless resp.nil?
+     options[:production] = resp unless resp.nil?
    end
    opts.on('-k', '--api_key [key]', 'Default: none') do |resp|
-     @options[:api_key] = resp unless resp.nil?
+     options[:api_key] = resp unless resp.nil?
    end
    opts.on('-w', '--write [true/false]', 'Default: false') do |resp|
-     @options[:write] = resp unless resp.nil?
+     options[:write] = resp unless resp.nil?
    end
    opts.on('-j', '--jurisdiction_id [jurisdiction_id]', 'Default: none') do |resp|
-     @options[:jurisdiction_id] = resp unless resp.nil?
+     options[:jurisdiction_id] = resp unless resp.nil?
    end
    opts.on('-a', '--address [address]', 'Default: none') do |resp|
-     @options[:address] = resp unless resp.nil?
+     options[:address] = resp unless resp.nil?
    end
 
  end.parse!
            
-@session = Session.new
+@session = Session.new(options)
 @session.run_tests

@@ -1,10 +1,20 @@
 
 
 class Response
-  attr_accessor :raw
+  attr_accessor :raw, :base, :format, :unwrap
+
+  def initialize(base,format)
+    @base = base
+    @format = format
+  end
+  
+  def get_and_unwrap(url,unwrap)
+    @unwrap = unwrap
+    get(url)
+  end
 
   def get(url)
-    @raw = HTTParty.get(url)
+    @raw = HTTParty.get("#{@base}#{url}")
     self
   end
   
@@ -16,6 +26,14 @@ class Response
   end
   
   def response
+    if @format == 'xml' and !@unwrap.nil?
+      Session.ensure_array(Session.unwrap(raw_response,@unwrap))
+    else
+      raw_response
+    end
+  end
+  
+  def raw_response
     Response.hash2ostruct(@raw.parsed_response)
   end
   

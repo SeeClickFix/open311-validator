@@ -1,12 +1,16 @@
 
 module DiscoveryHelper
   
+  def resource
+    @session.resource
+  end
+  
   def xml_endpoints
-    @resource.xml.response.discovery.endpoints.endpoint
+    resource.raw.xml.response.discovery.endpoints.endpoint
   end
   
   def json_endpoints
-    @resource.json.response.endpoints
+    resource.raw.json.response.endpoints
   end
   
   def all_endpoints
@@ -18,11 +22,11 @@ module DiscoveryHelper
   end
   
   def xml_discovery
-    @resource.xml.response.discovery
+    resource.raw.xml.response.discovery
   end
   
   def json_discovery
-    @resource.json.response
+    resource.raw.json.response
   end
   
   def endpoint_array(point)

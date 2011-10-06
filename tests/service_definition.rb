@@ -24,6 +24,7 @@ test "Service Definitions", :with => :definition_resource do
   # end
   
   rule 'test resource' do
+    raise @session.resource.raw.inspect
     # raise @session.prev_resource.inspect
     # raise @resource.xml.inspect
   end

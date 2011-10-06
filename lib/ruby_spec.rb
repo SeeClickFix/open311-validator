@@ -70,7 +70,6 @@ end
 
 def test(msg,options)
   puts "  Testing - #{msg.to_s}"
-  @session.add_resource OpenStruct.new(@options.merge(options))
-  @resource = @session.resource
+  @session.add_resource(options)
   yield
 end
