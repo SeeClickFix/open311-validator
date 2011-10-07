@@ -1,33 +1,18 @@
+require 'test_helper';include TestHelper 
 
-  #  @session.resources  = History of resources for entire session of tests.
-  #  @resource = currently tested resource.
-  #  @resource.options  = options used for that resource
-  #  @resource.json.response = objectified response
-  #  @resource.json.headers = response headers
-  #  @resource.json.body = response body
-  #  @resource.json.request = httparty request object
-  #
-  #
 
 test "Services", :with => :services_resource do
   
-  rule 'each should return something' do 
-   # raise resource.raw.map{|r| r.response }.flatten.inspect
-    
-    resource.raw.each do |services| 
-      services.response
+  rule 'there should be at least one service right?' do 
+    raw_services.each do |services| 
+      services.response.size.should > 0
     end
-    
-    
-    # @resource.xml.each do |request|
-    #   request.response.should_not == ''
-    # end
-    # 
-    # if @resource.options.json
-    #   @resource.json.each do |request|
-    #     request.response.should_not == ''
-    #   end
-    # end
+  end
+  
+  rule 'all services should have a service code' do
+    @session.services.each do |service|
+      service.service_code.should_not be.nil?
+    end
   end
   
 end

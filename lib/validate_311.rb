@@ -1,10 +1,11 @@
 
-require 'rubygems'
-require 'response'
+
+require 'client'
 require 'session'
 require 'resource'
 require 'ruby_spec'
+
+require 'rubygems'
 require 'ostruct'
 require 'httparty'
 require 'spec'
-require 'test_helper';include TestHelper

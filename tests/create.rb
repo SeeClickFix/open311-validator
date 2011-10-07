@@ -12,7 +12,7 @@
 
 data = { :email => 'foo@bar.com', :description => 'I know' }
 
-test "Creating Response Once", { :with => :create_resource_once, :post => data } do
+test "Creating Client Once", { :with => :create_resource_once, :post => data } do
   
   rule 'each should return something' do 
     @resource.xml.each do |request|

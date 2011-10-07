@@ -7,6 +7,21 @@ class Session
     @options   = options
   end
   
+  def run_tests
+    load 'tests/discovery.rb'
+    load 'tests/services.rb'
+    load 'tests/service_definition.rb'
+    #load 'tests/create.rb' if @options[:write]
+  end
+  
+  #
+  #  Resource mgmt.
+  def add_resource(options)
+    resource = Resource.new(self,@options.merge(options))
+    resource.get_next
+    @resources << resource
+  end
+  
   def resources
     @resources
   end
@@ -19,27 +34,7 @@ class Session
     @resources.last
   end
   
-  def prev_resource
-    @resources[@resources.count-2]
-  end
-  
-  def add_resource(options)
-    resource = Resource.new(self,@options.merge(options))
-    resource.get_next
-    @resources << resource
-  end
-  
-  def run_tests
-    load 'tests/discovery.rb'
-#  endpoints
-    load 'tests/services.rb'
-    load 'tests/service_definition.rb'
-    #load 'tests/create.rb' if @options[:write]
-  end
-  
-  #
-  #    :url => format
-  #
+  # Endpoint mgmt.
   def endpoints
     t = []
     # We need to handle json and xml differently because xml sucks and can't be parsed predictably.
@@ -58,14 +53,6 @@ class Session
     t
   end
   
-  def services
-    @resources[1].raw.map{|r| r.response }.flatten
-  end
-  
-  def raw_services
-    @resources[1].raw
-  end
-  
   def all_endpoints
     json_endpoints + xml_endpoints
   end
@@ -74,14 +61,22 @@ class Session
     Session.unwrap(discovery.raw.json, 'response.endpoints').select{|endpoint| production_safe?(endpoint) }
   end
   
-  def production_safe?(endpoint)
-    type(endpoint) != 'production' or @options[:production]
-  end
-  
   def xml_endpoints
     Session.ensure_array(Session.unwrap(discovery.raw.xml,'response.discovery.endpoints.endpoint')).select{|endpoint| production_safe?(endpoint) }
   end
   
+  #
+  #  Services Lookup
+  #
+  def services
+    @resources[1].raw.map{|r| r.response }.flatten
+  end
+  
+  def raw_services
+    @resources[1].raw
+  end
+  
+  # Class Methods
   def self.unwrap(obj,methods)
     methods.split('.').each do |method|
       obj = obj.send method.to_sym
@@ -95,8 +90,9 @@ class Session
   
   private
   
-  def type(endpoint)
-    endpoint.marshal_dump[:type]
+  # The marshal_dump is to avoid calling .type on the obj.
+  def production_safe?(endpoint)
+    endpoint.marshal_dump[:type] != 'production' or @options[:production]
   end
   
 end

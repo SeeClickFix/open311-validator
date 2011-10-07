@@ -1,6 +1,6 @@
 
 
-class Response
+class Client
   attr_accessor :raw, :base, :format, :unwrap
 
   def initialize(base,format)
@@ -34,11 +34,11 @@ class Response
   end
   
   def raw_response
-    Response.hash2ostruct(@raw.parsed_response)
+    Client.hash2ostruct(@raw.parsed_response)
   end
   
   def headers
-    Response.hash2ostruct(@raw.headers)
+    Client.hash2ostruct(@raw.headers)
   end
   
   def body
@@ -56,12 +56,12 @@ class Response
     when Hash
       object = object.clone
       object.each do |key, value|
-        object[key] = Response.hash2ostruct(value)
+        object[key] = Client.hash2ostruct(value)
       end
       OpenStruct.new(object)
     when Array
       object = object.clone
-      object.map! { |i| Response.hash2ostruct(i) }
+      object.map! { |i| Client.hash2ostruct(i) }
     else
       object
     end

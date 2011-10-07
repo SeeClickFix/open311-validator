@@ -15,14 +15,14 @@ class Resource
   
   def discovery_url
     @raw = OpenStruct.new
-    @raw.json = Response.new(@options[:discovery_url],'json').get(".json")
-    @raw.xml  = Response.new(@options[:discovery_url],'xml').get(".xml")
+    @raw.json = Client.new(@options[:discovery_url],'json').get(".json")
+    @raw.xml  = Client.new(@options[:discovery_url],'xml').get(".xml")
   end
 
   def services_resource
     @raw = []
     @session.endpoints.each do |endpoint|
-      response = Response.new(endpoint[0],endpoint[1])
+      response = Client.new(endpoint[0],endpoint[1])
       response.get_and_unwrap("/services.#{endpoint[1]}?jurisdiction_id=#{@options[:jurisdiction_id]}",'services.service')
       @raw << response
     end
@@ -33,7 +33,7 @@ class Resource
     @session.raw_services.each do |raw_service|
       raw_service.response.each do |service|
         next if !service.metadata or service.metadata == 'false'
-        response = Response.new(raw_service.base,raw_service.format)
+        response = Client.new(raw_service.base,raw_service.format)
         response.get_and_unwrap("/services/#{service.service_code}.#{raw_service.format}?jurisdiction_id=#{@options[:jurisdiction_id]}",'')
         @raw << response
       end
@@ -63,12 +63,12 @@ class Resource
     # For each endpoint...
     @session.discovery.xml.response.discovery.endpoints.endpoint.each do |endpoint|
       next if type(endpoint) == 'production' and !@options.production
-      @raw.xml << Response.new.post("#{endpoint.url}/requests.xml",data_from_options)
+      @raw.xml << Client.new.post("#{endpoint.url}/requests.xml",data_from_options)
     end
     
     @session.discovery.json.response.endpoints.each do |endpoint|
       next if type(endpoint) == 'production' and !@options.production
-      @raw.json << Response.new.post("#{endpoint.url}/requests.json",data_from_options)
+      @raw.json << Client.new.post("#{endpoint.url}/requests.json",data_from_options)
     end if @options.json
     
     @raw.options = @options

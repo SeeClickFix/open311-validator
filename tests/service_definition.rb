@@ -1,13 +1,4 @@
-
-#  @session.resources  = History of resources for entire session of tests.
-#  @resource = currently tested resource.
-#  @resource.options  = options used for that resource
-#  @resource.json.response = objectified response
-#  @resource.json.headers = response headers
-#  @resource.json.body = response body
-#  @resource.json.request = httparty request object
-#
-#
+require 'test_helper';include TestHelper 
 
 test "Service Definitions", :with => :definition_resource do
   

@@ -1,15 +1,4 @@
-require 'helpers/discovery_helper';include DiscoveryHelper  
-
-  #  @session.resources  = History of resources for entire session of tests.
-  #  @resource = currently tested resource.
-  #  @resource.options  = options used for that resource
-  #  @resource.json.response = objectified response
-  #  @resource.json.headers = response headers
-  #  @resource.json.body = response body
-  #  @resource.json.request = httparty request object
-  #
-  #
-
+require 'test_helper';include TestHelper  
 
 test "Service Discovery", :with => :discovery_url do
   
@@ -88,14 +77,14 @@ test "Service Discovery", :with => :discovery_url do
   end
   
   rule "each endpoint should have at least one supported format" do 
-    all_endpoints.each do |endpoint|
-      endpoint_array(endpoint).size.should > 0
+    @session.endpoints.each do |endpoint|
+      endpoint.formats.size.should > 0
     end
   end
   
   rule "all v2 endpoints should support xml" do
     v2_endpoints.each do |endpoint|
-      endpoint_array(endpoint).select{|format| format == 'text/xml' }.size.should > 0
+      endpoint.formats.select{|format| format == 'text/xml' }.size.should > 0
     end
   end
   
