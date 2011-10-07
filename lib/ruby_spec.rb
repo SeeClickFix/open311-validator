@@ -1,61 +1,61 @@
 
-class PositiveSpec
-  def initialize(obj,required)
-    @obj = obj
-    @required = required
-  end
-  
-  def ==(other)
-    if @obj != other
-      raise Exception.new("#{requirement}: \"Expected: #{other} Got: #{@obj}\"")
-    end
-  end
+# class PositiveSpec
+#   def initialize(obj,required)
+#     @obj = obj
+#     @required = required
+#   end
+#   
+#   def ==(other)
+#     if @obj != other
+#       raise Exception.new("#{requirement}: \"Expected: #{other} Got: #{@obj}\"")
+#     end
+#   end
+# 
+#   def >(other)
+#     unless @obj > other
+#       raise Exception.new("#{requirement}: \"Expected: #{other} Got: #{@obj}\"")
+#     end
+#   end
+#   
+#   def requirement
+#     @required ? "REQUIRED" : "WARNING"
+#   end
+# end
 
-  def >(other)
-    unless @obj > other
-      raise Exception.new("#{requirement}: \"Expected: #{other} Got: #{@obj}\"")
-    end
-  end
-  
-  def requirement
-    @required ? "REQUIRED" : "WARNING"
-  end
-end
+# class NegativeSpec
+#   def initialize(obj,required)
+#     @obj = obj
+#     @required = required
+#   end
+#   
+#   def ==(other)
+#     if @obj == other
+#       raise Exception.new("#{requirement}: \"Expected: #{other} Got: #{@obj}\"")
+#     end
+#   end
+#   
+#   def requirement
+#     @required ? "REQUIRED" : "WARNING"
+#   end
+# end
 
-class NegativeSpec
-  def initialize(obj,required)
-    @obj = obj
-    @required = required
-  end
-  
-  def ==(other)
-    if @obj == other
-      raise Exception.new("#{requirement}: \"Expected: #{other} Got: #{@obj}\"")
-    end
-  end
-  
-  def requirement
-    @required ? "REQUIRED" : "WARNING"
-  end
-end
-
-class Object
-  def should
-    PositiveSpec.new(self,false)
-  end
-  
-  def should_not
-    NegativeSpec.new(self,false)
-  end
-  
-  def must
-    RequiredPositiveSpec.new(self,true)
-  end
-  
-  def must_not
-    RequiredNegativeSpec.new(self,true)
-  end
-end
+# class Object
+#   def should
+#     PositiveSpec.new(self,false)
+#   end
+#   
+#   def should_not
+#     NegativeSpec.new(self,false)
+#   end
+#   
+#   def must
+#     RequiredPositiveSpec.new(self,true)
+#   end
+#   
+#   def must_not
+#     RequiredNegativeSpec.new(self,true)
+#   end
+# end
 
 
 def rule(msg)
