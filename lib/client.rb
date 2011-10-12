@@ -27,7 +27,7 @@ class Client
   
   def response
     if @format == 'xml' and !@unwrap.nil?
-      Session.ensure_array(Session.unwrap(raw_response,@unwrap))
+      Array(Session.unwrap(raw_response,@unwrap))
     else
       raw_response
     end

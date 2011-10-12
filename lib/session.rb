@@ -35,22 +35,23 @@ class Session
   end
   
   # Endpoint mgmt.
-  def endpoints
+  def endpoint_array
     t = []
-    # We need to handle json and xml differently because xml sucks and can't be parsed predictably.
-    json_endpoints.each do |endpoint|
-      endpoint.formats.each do |format|
+    all_endpoints.each do |endpoint|
+      Session.endpoint_formats_as_array(endpoint).each do |format|
         next if format =~ /^.*html$/i
-        t << [endpoint.url,format.to_s.split('/')[1]]
-      end
-    end
-    xml_endpoints.each do |endpoint|
-      Session.ensure_array(Session.unwrap(endpoint,'formats.format')).each do |format|
-        next if format =~ /^.*html$/i
-        t << [endpoint.url,format.to_s.split('/')[1]]
+        t << [endpoint.url,format]
       end
     end
     t
+  end
+  
+  def self.endpoint_formats_as_array(endpoint)
+    Session.endpoint_formats(endpoint).map{|format| format.to_s.split('/')[1]}
+  end
+  
+  def self.endpoint_formats(endpoint)
+    endpoint.formats.is_a?(Array) ? endpoint.formats : Array(Session.unwrap(endpoint,'formats.format'))
   end
   
   def all_endpoints
@@ -62,7 +63,7 @@ class Session
   end
   
   def xml_endpoints
-    Session.ensure_array(Session.unwrap(discovery.raw.xml,'response.discovery.endpoints.endpoint')).select{|endpoint| production_safe?(endpoint) }
+    Array(Session.unwrap(discovery.raw.xml,'response.discovery.endpoints.endpoint')).select{|endpoint| production_safe?(endpoint) }
   end
   
   #
@@ -82,10 +83,6 @@ class Session
       obj = obj.send method.to_sym
     end
     obj
-  end
-  
-  def self.ensure_array(result)
-    result.is_a?(Array) ? result : [result]
   end
   
   private

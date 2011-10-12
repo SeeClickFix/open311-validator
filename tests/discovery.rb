@@ -77,14 +77,14 @@ test "Service Discovery", :with => :discovery_url do
   end
   
   rule "each endpoint should have at least one supported format" do 
-    @session.endpoints.each do |endpoint|
-      endpoint.formats.size.should > 0
+    all_endpoints.each do |endpoint|
+      Session.endpoint_formats(endpoint).size.should > 0
     end
   end
   
   rule "all v2 endpoints should support xml" do
     v2_endpoints.each do |endpoint|
-      endpoint.formats.select{|format| format == 'text/xml' }.size.should > 0
+      Session.endpoint_formats(endpoint).select{|format| format == 'text/xml' }.size.should > 0
     end
   end
   

@@ -21,7 +21,7 @@ class Resource
 
   def services_resource
     @raw = []
-    @session.endpoints.each do |endpoint|
+    @session.endpoint_array.each do |endpoint|
       response = Client.new(endpoint[0],endpoint[1])
       response.get_and_unwrap("/services.#{endpoint[1]}?jurisdiction_id=#{@options[:jurisdiction_id]}",'services.service')
       @raw << response
