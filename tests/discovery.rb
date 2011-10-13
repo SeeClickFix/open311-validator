@@ -21,8 +21,8 @@ test "Service Discovery", :with => :discovery_url do
   end
   
   rule 'return valid DateTime objects' do 
-    validate_date_time(xml_discovery.changeset).should == true
-    validate_date_time(json_discovery.changeset).should == true
+    validate_date_time(xml_discovery.changeset).class.should == Time
+    validate_date_time(json_discovery.changeset).class.should == Time
   end
     
   rule "contacts should return same for both formats" do 
@@ -57,7 +57,13 @@ test "Service Discovery", :with => :discovery_url do
   
   rule "each endpoint should have a valid changeset" do 
     all_endpoints.each do |endpoint|
-      validate_date_time(endpoint.changeset).should == true
+      validate_date_time(endpoint.changeset).class.should == Time
+    end
+  end
+  
+  rule "each endpoint should have a changeset in the past" do 
+    all_endpoints.each do |endpoint|
+      validate_date_time(endpoint.changeset).should < Time.now
     end
   end
   

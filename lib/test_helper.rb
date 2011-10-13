@@ -2,7 +2,7 @@
 module TestHelper
 
   def validate_date_time(time)
-    return true if Time.iso8601(time) rescue false
+    time.is_a?(Time) ? time : Time.iso8601(time) rescue false
   end
   
   def resource

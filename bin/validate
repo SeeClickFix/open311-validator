@@ -7,16 +7,13 @@ $LOAD_PATH.unshift(lib) if File.directory?(lib) && !$LOAD_PATH.include?(lib)
 require 'optparse'
 require 'validate_311'
 
-options = { :discovery_url   => 'http://seeclickfix.com/open311/discovery', 
+options = {  :discovery_url   => 'http://seeclickfix.com/open311/discovery', 
              :production      => false,
-             :api_key         => nil,
-             :jurisdiction_id => nil,
-             :address         => nil,
              :write           => false
            }
            
       
- OptionParser.new do |opts|
+ op = OptionParser.new do |opts|
    opts.banner = "Usage: validate [options]"
    opts.on('-u', '--url [discovery_url]','') do |url|
      options[:discovery_url] = url if url
@@ -37,7 +34,8 @@ options = { :discovery_url   => 'http://seeclickfix.com/open311/discovery',
      options[:address] = resp unless resp.nil?
    end
 
- end.parse!
+ end
+ op.parse!
            
 @session = Session.new(options)
-@session.run_tests
+@session.valid? ? @session.run_tests : (puts op)

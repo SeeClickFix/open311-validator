@@ -4,7 +4,10 @@ class Session
   
   def initialize(options)
     @resources = []
-    @options   = options
+    @options   = {
+      :production => false,
+      :write      => false
+    }.merge options
   end
   
   def run_tests
@@ -12,6 +15,14 @@ class Session
     load 'tests/services.rb'
     load 'tests/service_definition.rb'
     #load 'tests/create.rb' if @options[:write]
+  end
+  
+  def valid?
+    @options[:discovery_url] && 
+    !@options[:production].nil? &&
+    !@options[:write].nil? &&
+    !@options[:production].nil? &&
+    (!@options[:write] || ( @options[:write] && !@options[:address].nil? ))
   end
   
   #
