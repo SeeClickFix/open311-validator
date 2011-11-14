@@ -14,7 +14,7 @@ class Session
     load 'tests/discovery.rb'
     load 'tests/services.rb'
     load 'tests/service_definition.rb'
-    #load 'tests/create.rb' if @options[:write]
+    load 'tests/create.rb' if @options[:write]
   end
   
   def valid?
