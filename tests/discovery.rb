@@ -2,6 +2,14 @@ require 'test_helper';include TestHelper
 
 test "Service Discovery", :with => :discovery_url do
   
+  rule 'discovery.xml should be mime type text/xml' do
+    resource.raw.xml.headers["content-type"].should == 'text/xml'
+  end
+
+  rule 'discovery.json should be mime type application/json' do
+    resource.raw.json.headers["content-type"].should == 'application/json'
+  end
+  
   rule 'url should end with "discovery"' do 
     resource.options[:discovery_url][-9..-1].should == 'discovery'
   end

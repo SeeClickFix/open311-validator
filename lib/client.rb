@@ -14,14 +14,14 @@ class Client
   end
 
   def get(url)
-    @raw = HTTParty.get("#{@base}#{url}")
+    @raw = HTTParty.get("#{@base}#{url}", :format => @format.to_sym)
     self
   end
   
   def post(url,body)
     # TODO: remove. This is simply for my testing.
-    url = 'http://localhost:3000/open311/requests.xml'
-    @raw = HTTParty.post(url, :body => body)
+    # url = 'http://localhost:3000/open311/requests.xml'
+    @raw = HTTParty.post(url, :body => body, :format => @format.to_sym)
     self
   end
   
