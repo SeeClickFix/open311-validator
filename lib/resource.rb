@@ -23,7 +23,7 @@ class Resource
     @raw = []
     @session.endpoint_array.each do |endpoint|
       response = Client.new(endpoint[0],endpoint[1])
-      response.get_and_unwrap("/services.#{endpoint[1]}?jurisdiction_id=#{@options[:jurisdiction_id]}",'services.service')
+      response.get_and_unwrap("/services.#{endpoint[1]}",'services.service',{:jurisdiction_id => @options[:jurisdiction_id]})
       @raw << response
     end
   end
@@ -34,7 +34,7 @@ class Resource
       raw_service.response.each do |service|
         next if !service.metadata or service.metadata == 'false'
         response = Client.new(raw_service.base,raw_service.format)
-        response.get_and_unwrap("/services/#{service.service_code}.#{raw_service.format}?jurisdiction_id=#{@options[:jurisdiction_id]}",'')
+        response.get_and_unwrap("/services/#{service.service_code}.#{raw_service.format}",'',{:jurisdiction_id => @options[:jurisdiction_id]})
         @raw << response
       end
     end

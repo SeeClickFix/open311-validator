@@ -8,13 +8,17 @@ class Client
     @format = format
   end
   
-  def get_and_unwrap(url,unwrap)
+  def get_and_unwrap(url, unwrap, params=nil)
     @unwrap = unwrap
-    get(url)
+    get(url, params)
   end
 
-  def get(url)
-    @raw = HTTParty.get("#{@base}#{url}", :format => @format.to_sym)
+  def get(url, params=nil)
+    options = {
+      :format => @format.to_sym,
+      :query => params && params.delete_if {|key, value| value == nil}
+    }
+    @raw = HTTParty.get("#{@base}#{url}", options)
     self
   end
   
